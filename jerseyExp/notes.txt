@@ -1,0 +1,2 @@
+Followed the Tutorial
+1. http://repo1.maven.org/maven2/org/glassfish/jersey/jersey-documentation/2.4.1/jersey-documentation-2.4.1-user-guide.pdf
