@@ -2,31 +2,32 @@ package com.example;
 
 import static org.junit.Assert.*;
 
+import java.net.URI;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 public class MyResourceTest {
 
-	private HttpServer server;
-	private WebTarget target;
+	private static String BASE_URI = "http://localhost:8080/base";
+	Client c = ClientBuilder.newClient();
 
 	@Before
 	public void setUp() throws Exception {
-		server = Main.startServer();
-
-		Client c = ClientBuilder.newClient();
-		target = c.target(Main.BASE_URI);
+		ResourceConfig resourceConfig = new ResourceConfig(MyResource.class);
+		HttpServerFactory.startServer(new URI(BASE_URI),resourceConfig);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		server.stop();
+		HttpServerFactory.stopServer();
 	}
 
 	/**
@@ -34,6 +35,8 @@ public class MyResourceTest {
 	 */
 	@Test
 	public void testGetIt() {
+		WebTarget target = c.target(BASE_URI);
+
 		String responseMsg = target.path("myresource").request()
 				.get(String.class);
 		assertEquals("Got it!", responseMsg);
