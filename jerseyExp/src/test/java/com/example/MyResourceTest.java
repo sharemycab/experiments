@@ -17,17 +17,19 @@ import org.junit.Test;
 public class MyResourceTest {
 
 	private static String BASE_URI = "http://localhost:8080/base";
-	Client c = ClientBuilder.newClient();
+	private static Client c = null;
 
 	@Before
 	public void setUp() throws Exception {
 		ResourceConfig resourceConfig = new ResourceConfig(MyResource.class);
 		HttpServerFactory.startServer(new URI(BASE_URI),resourceConfig);
+		c = ClientBuilder.newClient();
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		HttpServerFactory.stopServer();
+		c.close();
 	}
 
 	/**
