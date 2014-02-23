@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!-- 
+Creation Date : 23-Feb-2014 
+Author :nitiraj
+Description : 
+-->
+<html>
+  <head>
+  	<title>Google Map Page</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwqt3HIETt1SA9vgxQI0MDc-hC0JHVG2g&sensor=true">
+    </script>
+    <script type="text/javascript">
+    
+      function initialize() {
+    	  var chicago  = new google.maps.LatLng(41.850033, -87.6500523);
+        var mapOptions = {
+          center: chicago,
+          zoom: 10
+        };
+        var map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+        
+        var homeControlDiv = document.createElement('div');
+        
+        // Create the DIV to hold the control and call the HomeControl() constructor
+        // passing in this DIV.
+        var homeControl = new HomeControl2(homeControlDiv, map, chicago);
+        
+
+        homeControlDiv.index = 1;
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(homeControlDiv);
+      }
+      /**
+       * The HomeControl adds a control to the map that
+       * returns the user to the control's defined home.
+       */
+
+      // Define a property to hold the Home state.
+      HomeControl2.prototype.home_ = null;
+
+      // Define setters and getters for this property.
+      HomeControl2.prototype.getHome = function() {
+        return this.home_;
+      };
+
+      HomeControl2.prototype.setHome = function(home) {
+        this.home_ = home;
+      };
+
+      
+      function HomeControl2(div, map, home){
+   // Get the control DIV. We'll attach our control UI to this DIV.
+      var controlDiv = div;
+
+      // We set up a variable for the 'this' keyword since we're adding event
+      // listeners later and 'this' will be out of scope.
+      var control = this;
+
+      // Set the home property upon construction.
+      control.home_ = home;
+
+      // Set CSS styles for the DIV containing the control. Setting padding to
+      // 5 px will offset the control from the edge of the map.
+      controlDiv.style.padding = '5px';
+
+      // Set CSS for the control border.
+      var goHomeUI = document.createElement('div');
+      goHomeUI.title = 'Click to set the map to Home';
+      controlDiv.appendChild(goHomeUI);
+
+      // Set CSS for the control interior.
+      var goHomeText = document.createElement('div');
+      goHomeText.innerHTML = '<strong>Home</strong>';
+      goHomeUI.appendChild(goHomeText);
+
+      // Set CSS for the setHome control border.
+      var setHomeUI = document.createElement('div');
+      setHomeUI.title = 'Click to set Home to the current center';
+      controlDiv.appendChild(setHomeUI);
+
+      // Set CSS for the control interior.
+      var setHomeText = document.createElement('div');
+      setHomeText.innerHTML = '<strong>Set Home</strong>';
+      setHomeUI.appendChild(setHomeText);
+
+      // Setup the click event listener for Home:
+      // simply set the map to the control's current home property.
+      google.maps.event.addDomListener(goHomeUI, 'click', function() {
+        var currentHome = control.getHome();
+        map.setCenter(currentHome);
+      });
+
+      // Setup the click event listener for Set Home:
+      // Set the control's home to the current Map center.
+      google.maps.event.addDomListener(setHomeUI, 'click', function() {
+        var newHome = map.getCenter();
+        control.setHome(newHome);
+      });
+      }
+      
+      function HomeControl(controlDiv, map, homeLatLng) {
+
+    	  // Set CSS styles for the DIV containing the control
+    	  // Setting padding to 5 px will offset the control
+    	  // from the edge of the map.
+    	  controlDiv.style.padding = '5px';
+
+    	  // Set CSS for the control border.
+    	  var controlUI = document.createElement('div');
+    	  controlUI.style.backgroundColor = 'white';
+    	  controlUI.style.borderStyle = 'solid';
+    	  controlUI.style.borderWidth = '2px';
+    	  controlUI.style.cursor = 'pointer';
+    	  controlUI.style.textAlign = 'center';
+    	  controlUI.title = 'Click to set the map to Home';
+    	  controlDiv.appendChild(controlUI);
+
+    	  // Set CSS for the control interior.
+    	  var controlText = document.createElement('div');
+    	  controlText.style.fontFamily = 'Arial,sans-serif';
+    	  controlText.style.fontSize = '12px';
+    	  controlText.style.paddingLeft = '4px';
+    	  controlText.style.paddingRight = '4px';
+    	  controlText.innerHTML = '<strong>Home</strong>';
+    	  controlUI.appendChild(controlText);
+
+    	  // Setup the click event listeners: simply set the map to Chicago.
+    	  google.maps.event.addDomListener(controlUI, 'click', function() {
+    	    map.setCenter(homeLatLng)
+    	  });
+    	}
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+      
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>

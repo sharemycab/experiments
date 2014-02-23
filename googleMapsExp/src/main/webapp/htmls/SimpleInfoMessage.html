@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!-- 
+Creation Date : 22-Feb-2014 
+Author :nitiraj
+Description : Creates simple InfoMessage Object
+-->
+<html>
+  <head>
+  	<title>Google Map Page</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwqt3HIETt1SA9vgxQI0MDc-hC0JHVG2g&sensor=true">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+    	  var latLng = new google.maps.LatLng(-25.363882,131.044922);
+        var mapOptions = {
+          center: latLng,
+          zoom: 4
+        };
+        map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+        
+        var southWest = new google.maps.LatLng(-31.203405,125.244141);
+        var northEast = new google.maps.LatLng(-25.363882,131.044922);
+        var bounds = new google.maps.LatLngBounds(southWest,northEast);
+        map.fitBounds(bounds);
+        
+        var latSpan = northEast.lat() - southWest.lat();
+        var lngSpan = northEast.lng() - southWest.lng();
+        
+        for( var i = 0 ; i < 5 ; i++){
+        	
+        	var lat = southWest.lat() + latSpan * Math.random();
+        	var lng = southWest.lng() + lngSpan * Math.random();
+        	
+        	var marker = new google.maps.Marker({
+        		position : new google.maps.LatLng(lat,lng),
+        		map : map
+        	});
+        	
+        	var j = i + 1;
+        	marker.setTitle(j.toString());
+        	
+        	attachMarkerSecret(marker, i);
+        }
+      }
+      
+      function attachMarkerSecret(marker,index){
+    	  var messages =[ "This" , "is" , "a", "secret", "message"];
+    	  
+    	  var infoWindow = new google.maps.InfoWindow({
+    		  content : messages[index],
+    		  size : new google.maps.Size(50,50)
+    	  });
+    	  
+    	  google.maps.event.addListener(marker,'click', function(){
+    		  infoWindow.open(map,marker);
+    	  });
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>
