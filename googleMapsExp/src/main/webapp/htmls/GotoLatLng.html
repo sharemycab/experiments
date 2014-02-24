@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!-- 
+Creation Date : 23-Feb-2014 
+Author :nitiraj
+Description : 
+-->
+<html>
+  <head>
+  	<title>Google Map Page</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwqt3HIETt1SA9vgxQI0MDc-hC0JHVG2g&sensor=true">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(-34.397, 150.644),
+          zoom: 8
+        };
+        var map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+        
+        createGoto(map);
+      }
+      
+      function createGoto(map){
+    	  
+    	  var div = document.createElement('div');
+    	  
+    	  var latInput = document.createElement('input');
+    	  latInput.type = "text";
+    	  
+    	  var lngInput = document.createElement('input');
+    	  lngInput.type = "text";
+    	  
+    	  var submit = document.createElement('input')
+    	  submit.type = "button";
+    	  submit.value = "Go";
+    	  
+    	  google.maps.event.addDomListener(submit,'click',function(){
+    		map.setCenter(new google.maps.LatLng(latInput.value, lngInput.value));  
+    	  });
+    	  
+    	  div.appendChild(latInput);
+    	  div.appendChild(lngInput);
+    	  div.appendChild(submit);
+    	  
+    	  div.index = 1;
+    	  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(div);
+    	  
+    	  google.maps.event.addListener(map, 'dblclick', function(mouseEvent){
+    		var latLng = mouseEvent.latLng;
+    		latInput.value = latLng.lat();
+    		lngInput.value = latLng.lng();
+    	  });
+    	  
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>
