@@ -16,11 +16,11 @@ Description :
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwqt3HIETt1SA9vgxQI0MDc-hC0JHVG2g&sensor=true">
     </script>
-    <script type="text/javascript">
+     <script type="text/javascript">
       function initialize(location) {
         var mapOptions = {
           center: new google.maps.LatLng(location.lat(), location.lng()),
-          zoom: 8,
+          zoom: 20,
           disableDefaultUI: true,
           panControl: true,
           zoomControl: true,
@@ -53,14 +53,18 @@ Description :
     	    }
     	  });
     	}
-      var findButton = document.getElementById("find");
-      google.maps.event.addDomListener(findButton, 'click', searchLocations);
+      
+      function initApp(){
+    	  var findButton = document.getElementById("find");
+          google.maps.event.addDomListener(findButton, 'click', searchLocations);
+      }
+      
     </script>
   </head>
-  <body>
+  <body onload=initApp()>
   	<div>
-  	<input type="text" />
-  	<input type="button" />
+  	<input id="addressInput" type="text" />
+  	<input id="find" type="button" value="Find" />
   	</div>
     <div id="map-canvas"></div>
   </body>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!-- 
+Creation Date : 16-Mar-2014 
+Author :nitiraj
+Description : 
+-->
+<html>
+  <head>
+  	<title>Google Map Page</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwqt3HIETt1SA9vgxQI0MDc-hC0JHVG2g&sensor=true">
+    </script>
+    <script type="text/javascript" src="../js/testroot.js"></script>
+    <script type="text/javascript">
+    var map = null;
+    function ajaxGetCall(url, isAjax, onSuccessCallBack){
+    	var xmlhttp;
+    	if (window.XMLHttpRequest)
+    	  {// code for IE7+, Firefox, Chrome, Opera, Safari
+    	  xmlhttp=new XMLHttpRequest();
+    	  }
+    	else
+    	  {// code for IE6, IE5
+    	  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    	  }
+    	xmlhttp.onreadystatechange=function()
+    	  {
+    		console.log("xmlhttp.readyState = " + xmlhttp.readyState + ", xmlhttp.status = " + xmlhttp.status);
+    	  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    	    {
+//    	    document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+				onSuccessCallBack(xmlhttp.responseText);
+    	    }
+    	}
+    	xmlhttp.open("GET",url,isAjax);
+    	xmlhttp.send();
+    }
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(-34.397, 150.644),
+          zoom: 8
+        };
+        map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+        
+        var submitButton = document.getElementById("submitButton");
+        google.maps.event.addDomListener(submitButton, 'click', findPath);
+      }
+      
+      function renderPath(route){
+    	  console.log("received path : " + route);
+    	  var directionRenderer = new google.maps.DirectionsRenderer();
+    	  directionRenderer.setDirections(route);
+		  directionRenderer.setMap(map);
+      }
+      
+      function findPath(){
+    	  var sourceInput = document.getElementById("source").value;
+    	  var destinationInput = document.getElementById("destination").value;
+    	  var restUrl = "../rest/getDirection?source=" + sourceInput + "&destination=" + destinationInput;
+    	  // Make ajax call.
+    	  ajaxGetCall(restUrl,true,renderPath);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+	<input type="text" id="source" value="BTM Layout 2nd Stage" />
+	<input type="text" id="destination" value="BTM Layout 1" />
+	<input type="button" id="submitButton" value="FindPath"/>
+    <div id="map-canvas"></div>
+  </body>
+</html>
